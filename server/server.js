@@ -55,4 +55,8 @@ socket.on('send_message', async ({ userId, username, content, room }) => {
 socket.on('disconnect', () => console.log('User disconnected'));
 });
 
-server.listen(4000, () => console.log('Server running on http://localhost:4000'));
+const PORT = process.env.PORT || 4000;
+
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
