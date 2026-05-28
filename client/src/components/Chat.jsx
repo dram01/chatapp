@@ -11,7 +11,7 @@ export default function Chat({ user }) {
   const [currentRoom, setCurrentRoom] = useState("мафія");
 
   useEffect(() => {
-    axios.get(`http://chatapp-production-baa8.up.railway.app/messages?room=${currentRoom}`)
+    axios.get(`https://chatapp-production-baa8.up.railway.app/messages?room=${currentRoom}`)
       .then((res) => setMessages(res.data));
     socket.emit("join_room", currentRoom);
     socket.on("receive_message", (msg) =>

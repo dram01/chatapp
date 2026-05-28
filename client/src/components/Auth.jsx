@@ -8,18 +8,24 @@ export default function Auth ({ onLogin }) {
     const [error, setError] = useState("");
 
     const handleSubmit = async () => {
-        const endpoint = isRegister ? "register" : "login";
-        try {
-            const res = await axios.post(`https://chatapp-production-baa8.up.railway.app/${endpoint}`, {
-                username,
-                password,
-            });
-            if (!isRegister) onLogin(res.data.user);
-            else setIsRegister(false);
-        }   catch (err) {
-            setError(err.response?.data?.error || "Something went wrong");
-        }
-    };
+  const endpoint = isRegister ? "register" : "login";
+
+  try {
+    const res = await axios.post(
+      `https://chatapp-production-baa8.up.railway.app/auth/${endpoint}`,
+      {
+        username,
+        password,
+      }
+    );
+
+    if (!isRegister) onLogin(res.data.user);
+    else setIsRegister(false);
+
+  } catch (err) {
+    setError(err.response?.data?.error || "Something went wrong");
+  }
+};
 
     return (
     <div style={{ maxWidth: 300, margin: "100px auto", textAlign: "center" }}>
