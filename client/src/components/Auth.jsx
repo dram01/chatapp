@@ -10,7 +10,7 @@ export default function Auth ({ onLogin }) {
     const handleSubmit = async () => {
         const endpoint = isRegister ? "register" : "login";
         try {
-            const res = await axios.post(`http://localhost:4000/auth/${endpoint}`, {
+            const res = await axios.post(`https://chatapp-production-baa8.up.railway.app/${endpoint}`, {
                 username,
                 password,
             });

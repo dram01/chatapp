@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import axios from "axios";
 
-const socket = io("chatapp-production-baa8.up.railway.app");
+const socket = io("http://chatapp-production-baa8.up.railway.app");
 const ROOMS = ["мафія", "ташуля", "гамно", "жопа", "ойой"];
 
 export default function Chat({ user }) {
@@ -11,7 +11,7 @@ export default function Chat({ user }) {
   const [currentRoom, setCurrentRoom] = useState("мафія");
 
   useEffect(() => {
-    axios.get(`chatapp-production-baa8.up.railway.app/messages?room=${currentRoom}`)
+    axios.get(`http://chatapp-production-baa8.up.railway.app/messages?room=${currentRoom}`)
       .then((res) => setMessages(res.data));
     socket.emit("join_room", currentRoom);
     socket.on("receive_message", (msg) =>

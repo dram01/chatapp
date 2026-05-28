@@ -10,8 +10,10 @@ const authRoutes = require('./routes/auth');
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
-    cors: { origin: 'http://localhost:5173' }
+    cors: { origin: 'https://chatapp-steel-eta.vercel.app' }
 });
+
+app.use(cors({ origin: 'https://chatapp-steel-eta.vercel.app' }));
 
 app.use(cors());
 app.use(express.json());
