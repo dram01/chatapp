@@ -13,7 +13,7 @@ const io = new Server(server, {
     cors: { origin: 'https://chatapp-steel-eta.vercel.app' }
 });
 
-app.use(cors({ origin: 'https://chatapp-steel-eta.vercel.app' }));
+app.use(cors({ origin: 'https://chatapp-steel-eta.vercel.app' })); 
 
 app.use(cors());
 app.use(express.json());
