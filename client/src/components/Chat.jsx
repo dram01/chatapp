@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import axios from "axios";
 
-const socket = io("http://chatapp-production-baa8.up.railway.app");
+const socket = io("https://chatapp-production-baa8.up.railway.app");
 const ROOMS = ["мафія", "ташуля", "гамно", "жопа", "ойой"];
 
 export default function Chat({ user }) {
