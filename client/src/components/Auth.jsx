@@ -11,11 +11,15 @@ export default function Auth ({ onLogin }) {
   const endpoint = isRegister ? "register" : "login";
 
   try {
+    console.log("NEW AUTH CODE");
+console.log(
+  `https://chatapp-production-baa8.up.railway.app/auth/${endpoint}`
+);
     const res = await axios.post(
       `https://chatapp-production-baa8.up.railway.app/auth/${endpoint}`,
       {
         username,
-        password,
+        password, 
       }
     );
 
