@@ -3,7 +3,7 @@ import { io } from "socket.io-client";
 import axios from "axios";
 
 const socket = io("https://chatapp-production-baa8.up.railway.app");
-const ROOMS = ["мафія", "ташуля", "гамно", "жопа", "ойой"];
+const чатики = ["мафія", "ташуля", "гамно", "жопа", "ойой"];
 
 export default function Chat({ user, onLogout }) {
   const [messages, setMessages] = useState([]);
@@ -57,8 +57,8 @@ export default function Chat({ user, onLogout }) {
           onClick={onLogout}
           style={{
             background: "transparent",
-            border: "1px solid #555",
-            color: "#aaa",
+            border: "1px solid #473dfa",
+            color: "#aaaaaa",
             borderRadius: 6,
             padding: "4px 10px",
             cursor: "pointer",
@@ -70,8 +70,8 @@ export default function Chat({ user, onLogout }) {
           Log out
         </button>
         <hr style={{ borderColor: "#555", marginBottom: 16 }} />
-        <p style={{ color: "#aaa", fontSize: 12, marginBottom: 8 }}>ROOMS</p>
-        {ROOMS.map((room) => (
+        <p style={{ color: "#aaa", fontSize: 12, marginBottom: 8 }}>чатики :3</p>
+        {чатики.map((room) => (
           <div
             key={room}
             onClick={() => switchRoom(room)}
@@ -121,19 +121,19 @@ export default function Chat({ user, onLogout }) {
                     gap: 10,
                     margin: "20px 0 12px",
                   }}>
-                    <div style={{ flex: 1, height: 1, background: "#ddd" }} />
+                    <div style={{ flex: 1, height: 1, background: "#eb22e7" }} />
                     <span style={{
                       fontSize: 12,
-                      color: "#aaa",
-                      background: "white",
+                      color: "black",
+                      background: "rgb(241, 211, 11)",
                       padding: "2px 10px",
                       borderRadius: 10,
-                      border: "1px solid #ddd",
+                      border: "1px solid #e8f008",
                       whiteSpace: "nowrap",
                     }}>
                       {formatDateLabel(m.created_at)}
                     </span>
-                    <div style={{ flex: 1, height: 1, background: "#ddd" }} />
+                    <div style={{ flex: 1, height: 1, background: "#1636d2" }} />
                   </div>
                 )}
 
@@ -150,8 +150,8 @@ export default function Chat({ user, onLogout }) {
                     </div>
                   )}
                   <div style={{
-                    background: isMe ? "#5865f2" : "#e9e9e9",
-                    color: isMe ? "white" : "black",
+                    background: isMe ? "#e1ff00" : "#5865f2",
+                    color: isMe ? "black" : "black",
                     padding: "8px 14px",
                     borderRadius: isMe ? "18px 18px 4px 18px" : "18px 18px 18px 4px",
                     maxWidth: "70%",
