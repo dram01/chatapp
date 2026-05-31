@@ -5,7 +5,7 @@ import axios from "axios";
 const socket = io("https://chatapp-production-baa8.up.railway.app");
 const ROOMS = ["мафія", "ташуля", "гамно", "жопа", "ойой"];
 
-export default function Chat({ user }) {
+export default function Chat({ user, onLogout }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [currentRoom, setCurrentRoom] = useState("мафія");
@@ -53,6 +53,22 @@ export default function Chat({ user }) {
       {/* Sidebar */}
       <div style={{ width: 200, background: "#2f3136", color: "white", padding: 16, flexShrink: 0 }}>
         <h3 style={{ marginBottom: 8 }}>👤 {user.username}</h3>
+        <button
+          onClick={onLogout}
+          style={{
+            background: "transparent",
+            border: "1px solid #555",
+            color: "#aaa",
+            borderRadius: 6,
+            padding: "4px 10px",
+            cursor: "pointer",
+            fontSize: 12,
+            marginBottom: 12,
+            width: "100%",
+          }}
+        >
+          Log out
+        </button>
         <hr style={{ borderColor: "#555", marginBottom: 16 }} />
         <p style={{ color: "#aaa", fontSize: 12, marginBottom: 8 }}>ROOMS</p>
         {ROOMS.map((room) => (
@@ -128,13 +144,11 @@ export default function Chat({ user }) {
                   alignItems: isMe ? "flex-end" : "flex-start",
                   marginBottom: 12,
                 }}>
-                  {/* Username for others */}
                   {!isMe && (
                     <div style={{ fontSize: 11, color: "#aaa", marginBottom: 3 }}>
                       {m.username}
                     </div>
                   )}
-                  {/* Bubble */}
                   <div style={{
                     background: isMe ? "#5865f2" : "#e9e9e9",
                     color: isMe ? "white" : "black",
@@ -145,7 +159,6 @@ export default function Chat({ user }) {
                   }}>
                     {m.content}
                   </div>
-                  {/* Time underneath bubble */}
                   <div style={{ fontSize: 10, color: "#aaa", marginTop: 3 }}>
                     {m.created_at ? new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ""}
                   </div>
@@ -177,4 +190,3 @@ export default function Chat({ user }) {
     </div>
   );
 }
-
