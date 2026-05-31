@@ -37,15 +37,14 @@ export default function Chat({ user }) {
     setInput("");
   };
 
-  const  formatDateLabel = (dateStr) => {
+  const formatDateLabel = (dateStr) => {
     const date = new Date(dateStr);
     const today = new Date();
     const yesterday = new Date();
     yesterday.setDate(today.getDate() - 1);
-
     if (date.toDateString() === today.toDateString()) return "Today";
     if (date.toDateString() === yesterday.toDateString()) return "Yesterday";
-    return date.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })
+    return date.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
   };
 
   return (
@@ -93,62 +92,69 @@ export default function Chat({ user }) {
             const prevDate = i > 0 && messages[i - 1].created_at
               ? new Date(messages[i - 1].created_at).toDateString()
               : null;
-            const showDateSeparator = currentDate && currentDate !== prevDate;  
+            const showDateSeparator = currentDate && currentDate !== prevDate;
 
             return (
-             <div key={i}>
+              <div key={i}>
 
-        {/* даточка */}
-        {showDateSeparator && (
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            margin: "20px 0 12px",
-          }}>
-            <div style={{ flex: 1, height: 1, background: "#ddd" }} />
-            <span style={{
-              fontSize: 12,
-              color: "#aaa",
-              background: "white",
-              padding: "2px 10px",
-              borderRadius: 10,
-              border: "1px solid #ddd",
-              whiteSpace: "nowrap",
-            }}>
-              {formatDateLabel(m.created_at)}
-            </span>
-            <div style={{ flex: 1, height: 1, background: "#ddd" }} />
-          </div>
-        )}
+                {/* даточка */}
+                {showDateSeparator && (
+                  <div style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    margin: "20px 0 12px",
+                  }}>
+                    <div style={{ flex: 1, height: 1, background: "#ddd" }} />
+                    <span style={{
+                      fontSize: 12,
+                      color: "#aaa",
+                      background: "white",
+                      padding: "2px 10px",
+                      borderRadius: 10,
+                      border: "1px solid #ddd",
+                      whiteSpace: "nowrap",
+                    }}>
+                      {formatDateLabel(m.created_at)}
+                    </span>
+                    <div style={{ flex: 1, height: 1, background: "#ddd" }} />
+                  </div>
+                )}
 
-        {/* булька повідомленнь */}
-        <div style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: isMe ? "flex-end" : "flex-start",
-          marginBottom: 12,
-        }}>
-          <div style={{ fontSize: 11, color: "#aaa", marginBottom: 3 }}>
-            {!isMe && <span style={{ marginRight: 6 }}>{m.username}</span>}
-            {m.created_at ? new Date(m.created_at).toLocaleTimeString() : ""}
-          </div>
-          <div style={{
-            background: isMe ? "#5865f2" : "#e9e9e9",
-            color: isMe ? "white" : "black",
-            padding: "8px 14px",
-            borderRadius: isMe ? "18px 18px 4px 18px" : "18px 18px 18px 4px",
-            maxWidth: "70%",
-            wordBreak: "break-word",
-          }}>
-            {m.content}
-          </div>
+                {/* булька повідомленнь */}
+                <div style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: isMe ? "flex-end" : "flex-start",
+                  marginBottom: 12,
+                }}>
+                  {/* Username for others */}
+                  {!isMe && (
+                    <div style={{ fontSize: 11, color: "#aaa", marginBottom: 3 }}>
+                      {m.username}
+                    </div>
+                  )}
+                  {/* Bubble */}
+                  <div style={{
+                    background: isMe ? "#5865f2" : "#e9e9e9",
+                    color: isMe ? "white" : "black",
+                    padding: "8px 14px",
+                    borderRadius: isMe ? "18px 18px 4px 18px" : "18px 18px 18px 4px",
+                    maxWidth: "70%",
+                    wordBreak: "break-word",
+                  }}>
+                    {m.content}
+                  </div>
+                  {/* Time underneath bubble */}
+                  <div style={{ fontSize: 10, color: "#aaa", marginTop: 3 }}>
+                    {m.created_at ? new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ""}
+                  </div>
+                </div>
+
+              </div>
+            );
+          })}
         </div>
-
-      </div>
-    );
-  })}
-</div>
 
         {/* Input bar */}
         <div style={{ padding: 16, borderTop: "1px solid #ccc", display: "flex", gap: 8, flexShrink: 0 }}>
@@ -171,3 +177,4 @@ export default function Chat({ user }) {
     </div>
   );
 }
+
