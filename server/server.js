@@ -13,9 +13,9 @@ const io = new Server(server, {
     cors: { origin: 'https://chatapp-steel-eta.vercel.app' }
 });
 
-app.use(cors({ origin: 'https://chatapp-steel-eta.vercel.app' })); 
+app.use(cors({ origin: 'https://chatapp-steel-eta.vercel.app' }));
 
-app.use(cors());
+
 app.use(express.json());
 app.use('/auth', authRoutes);
 
@@ -55,8 +55,4 @@ socket.on('send_message', async ({ userId, username, content, room }) => {
 socket.on('disconnect', () => console.log('User disconnected'));
 });
 
-const PORT = process.env.PORT || 4000;
-
-server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+server.listen(4000, () => console.log('Server running on http://localhost:4000'));
