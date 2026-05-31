@@ -10,13 +10,13 @@ const authRoutes = require('./routes/auth');
 
 const app = express();
 const server = http.createServer(app);
+
 const ALLOWED_ORIGIN = 'https://chatapp-steel-eta.vercel.app';
 
-
+// Manual CORS headers
 app.use((req, res, next) => {
-    const allowedOrigins = ['https://chatapp-steel-eta.vercel.app'];
     const origin = req.headers.origin;
-    if (allowedOrigins.includes(origin)) {
+    if (origin === ALLOWED_ORIGIN) {
         res.header('Access-Control-Allow-Origin', origin);
     }
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -29,15 +29,6 @@ app.use((req, res, next) => {
 
 const io = new Server(server, {
     cors: {
-        origin: ['https://chatapp-steel-eta.vercel.app'],
-        methods: ["GET", "POST"]
-    }
-});
-
-
-
-const io = new Server(server, {
-    cors: { 
         origin: ALLOWED_ORIGIN,
         methods: ["GET", "POST"]
     }
