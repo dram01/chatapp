@@ -6,16 +6,22 @@ const cors = require('cors');
 const pool = require('./db/pool');
 const authRoutes = require('./routes/auth');
 
-
 const app = express();
 const server = http.createServer(app);
+
+const ALLOWED_ORIGIN = 'https://chatapp-steel-eta.vercel.app';
+
 const io = new Server(server, {
-    cors: { origin: 'https://chatapp-steel-eta.vercel.app' }
+    cors: { 
+        origin: ALLOWED_ORIGIN,
+        methods: ["GET", "POST"]
+    }
 });
 
-app.use(cors({ origin: 'https://chatapp-steel-eta.vercel.app' }));
-
-
+app.use(cors({ 
+    origin: ALLOWED_ORIGIN,
+    methods: ["GET", "POST"]
+}));
 app.use(express.json());
 app.use('/auth', authRoutes);
 
@@ -37,22 +43,22 @@ io.on('connection', (socket) => {
 
     socket.on('leave_room', (room) => {
         socket.leave(room);
-    })
+    });
 
     socket.on('join_room', (room) => {
         socket.join(room);
         console.log(`User joined room: ${room}`);
     });
 
-socket.on('send_message', async ({ userId, username, content, room }) => {
-    await pool.query(
-        'INSERT INTO messages (sender_id, content, room) VALUES ($1, $2, $3)',
-        [userId, content, room]
-    );
-    io.to(room).emit('receive_message', {username, content, room });
-});
+    socket.on('send_message', async ({ userId, username, content, room }) => {
+        await pool.query(
+            'INSERT INTO messages (sender_id, content, room) VALUES ($1, $2, $3)',
+            [userId, content, room]
+        );
+        io.to(room).emit('receive_message', { username, content, room });
+    });
 
-socket.on('disconnect', () => console.log('User disconnected'));
+    socket.on('disconnect', () => console.log('User disconnected'));
 });
 
 server.listen(4000, () => console.log('Server running on http://localhost:4000'));
