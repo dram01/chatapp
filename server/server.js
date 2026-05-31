@@ -12,8 +12,13 @@ const app = express();
 const server = http.createServer(app);
 const ALLOWED_ORIGIN = 'https://chatapp-steel-eta.vercel.app';
 
-// Manual CORS headers - must be FIRST
+
 app.use((req, res, next) => {
+    const allowedOrigins = ['https://chatapp-steel-eta.vercel.app'];
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+        res.header('Access-Control-Allow-Origin', origin);
+    }
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     if (req.method === 'OPTIONS') {
@@ -22,11 +27,14 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(cors({ 
-    origin: ALLOWED_ORIGIN,
-    methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
+const io = new Server(server, {
+    cors: {
+        origin: ['https://chatapp-steel-eta.vercel.app'],
+        methods: ["GET", "POST"]
+    }
+});
+
+
 
 const io = new Server(server, {
     cors: { 
