@@ -13,6 +13,23 @@ const server = http.createServer(app);
 
 const ALLOWED_ORIGIN = 'https://chatapp-steel-eta.vercel.app';
 
+// Manual CORS headers - must be FIRST
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', ALLOWED_ORIGIN);
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(204);
+    }
+    next();
+});
+
+app.use(cors({ 
+    origin: ALLOWED_ORIGIN,
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 const io = new Server(server, {
     cors: { 
         origin: ALLOWED_ORIGIN,
@@ -20,10 +37,6 @@ const io = new Server(server, {
     }
 });
 
-app.use(cors({ 
-    origin: ALLOWED_ORIGIN,
-    methods: ["GET", "POST"]
-}));
 app.use(express.json());
 app.use('/auth', authRoutes);
 
