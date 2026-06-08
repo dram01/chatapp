@@ -25,9 +25,12 @@ export default function Chat({ user, onLogout }) {
   useEffect(() => {
   axios
     .get("https://chatapp-production-baa8.up.railway.app/users")
-    .then((res) => setUsers(res.data))
-    .catch((err) => console.error(err));
-}, []);
+    .then((res) => {
+      console.log("USERS:", res.data);
+      setUsers(res.data);
+    })
+    .catch((err) => console.error("USER ERROR:", err));
+  }, []);;
 
   const switchRoom = (room) => {
     socket.emit("leave_room", currentRoom);
