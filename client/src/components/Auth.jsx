@@ -6,6 +6,7 @@ export default function Auth ({ onLogin }) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleSubmit = async () => {
         const endpoint = isRegister ? "register" : "login";
@@ -34,6 +35,26 @@ export default function Auth ({ onLogin }) {
         onClick={() => setIsRegister(!isRegister)}>
         {isRegister ? "вже писав/ла тут крінжу раніше? залогінься бля" : "нема аккаунта? ЗАРЕЄСТРУЙСЯБЛЯ"}
       </p>
+
+      <input
+        placeholder="секретний парольчік"
+        type={showPassword ? "text" : "password"}
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+
+      <br />
+
+      <label>
+        <input
+          type="checkbox"
+          checked={showPassword}
+          onChange={() => setShowPassword(!showPassword)}
+        />
+        показати парольчік 👀
+      </label>
     </div>
+
+    
     );
 };
