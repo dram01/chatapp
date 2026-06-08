@@ -24,9 +24,9 @@ export default function Auth ({ onLogin }) {
     return (
     <div style={{ maxWidth: 300, margin: "100px auto", textAlign: "center" }}>
       <h2>{isRegister ? "бігом бля" : "логінбля"}</h2>
-      <input placeholder="Username" value={username}
+      <input placeholder="як батьки назвали?" value={username}
         onChange={(e) => setUsername(e.target.value)} /><br /><br />
-      <input placeholder="Password" type="password" value={password}
+      <input placeholder="секретний парольчік" type="password" value={password}
         onChange={(e) => setPassword(e.target.value)} /><br /><br />
       {error && <p style={{ color: "red" }}>{error}</p>}
       <button onClick={handleSubmit}>{isRegister ? "зареєструйся бля" : "залогінься бля"}</button>

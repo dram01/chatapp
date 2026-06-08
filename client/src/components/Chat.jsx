@@ -49,7 +49,7 @@ export default function Chat({ user, onLogout }) {
   setSidebarOpen(false);
   };  
 
-  const createPrivatChat  = (selectedUser) => {
+  const createPrivateChat  = (selectedUser) => {
     const roomName = [user.id, selectedUser.id] 
       .sort((a, b) => a - b)
       .join("_");
@@ -164,12 +164,13 @@ export default function Chat({ user, onLogout }) {
       <div style={{ color: "yellow", fontSize: 12 }}>
   Users loaded: {users.length}
 </div>
+
       {users
         .filter((u) => u.id !== user.id)
         .map((u) => (
           <div
             key={u.id}
-            onClick={() => createPrivatChat(u)}
+            onClick={() => createPrivateChat(u)}
             style={{
               padding: "8px 12px",
               borderRadius: 6,
