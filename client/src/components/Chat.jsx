@@ -3,23 +3,31 @@ import { io } from "socket.io-client";
 import axios from "axios";
 
 const socket = io("https://chatapp-production-baa8.up.railway.app");
-const ROOMS = ["мафія", "ташуля", "гамно", "жопа", "ойой"];
+
 
 export default function Chat({ user, onLogout }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [currentRoom, setCurrentRoom] = useState("мафія");
   const [sidebarOpen, setSidebarOpen] = useState(false); // visibility
+  
+
+  const [showUsers, setShowUsers] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [rooms, setRooms] = useState([
+     "мафія",
+     "ташуля",
+     "гамно",
+     "жопа",
+     "ойой"
+  ]); 
 
   useEffect(() => {
-    axios.get(`https://chatapp-production-baa8.up.railway.app/messages?room=${currentRoom}`)
-      .then((res) => setMessages(res.data));
-    socket.emit("join_room", currentRoom);
-    socket.on("receive_message", (msg) =>
-      setMessages((prev) => [...prev, msg])
-    );
-    return () => socket.off("receive_message");
-  }, [currentRoom]);
+  axios
+    .get("https://chatapp-production-baa8.up.railway.app/users")
+    .then((res) => setUsers(res.data))
+    .catch((err) => console.error(err));
+}, []);
 
   const switchRoom = (room) => {
     socket.emit("leave_room", currentRoom);
@@ -66,54 +74,111 @@ export default function Chat({ user, onLogout }) {
       )}
 
       {/* Sidebar */}
-      <div style={{
-        position: "fixed",
-        top: 0, left: 0, bottom: 0,
-        width: 220,
-        background: "#2f3136",
-        color: "white",
-        padding: 16,
-        flexShrink: 0,
-        zIndex: 20,
-        transform: sidebarOpen ? "translateX(0)" : "translateX(-100%)", // in/out
-        transition: "transform 0.3s ease",
-      }}>
-        <h3 style={{ marginBottom: 8 }}>👤 {user.username}</h3>
-        <button
-          onClick={onLogout}
-          style={{
-            background: "transparent",
-            border: "1px solid #555",
-            color: "#aaa",
-            borderRadius: 6,
-            padding: "4px 10px",
-            cursor: "pointer",
-            fontSize: 12,
-            marginBottom: 12,
-            width: "100%",
-          }}
-        >
-          Log out
-        </button>
-        <hr style={{ borderColor: "#555", marginBottom: 16 }} />
-        <p style={{ color: "#aaa", fontSize: 12, marginBottom: 8 }}>кімнатки</p>
-        {ROOMS.map((room) => (
+<div
+  style={{
+    position: "fixed",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    width: 220,
+    background: "#2f3136",
+    color: "white",
+    padding: 16,
+    flexShrink: 0,
+    zIndex: 20,
+    transform: sidebarOpen ? "translateX(0)" : "translateX(-100%)",
+    transition: "transform 0.3s ease",
+  }}
+>
+  <h3 style={{ marginBottom: 8 }}>👤 {user.username}</h3>
+
+  {/* New Chat Button */}
+  <button
+    onClick={() => setShowUsers(!showUsers)}
+    style={{
+      width: "100%",
+      padding: "8px",
+      marginBottom: "12px",
+      borderRadius: "6px",
+      border: "none",
+      cursor: "pointer",
+      background: "#5865f2",
+      color: "white",
+    }}
+  >
+    ➕ New Chat
+  </button>
+
+  {/* Logout Button */}
+  <button
+    onClick={onLogout}
+    style={{
+      background: "transparent",
+      border: "1px solid #555",
+      color: "#aaa",
+      borderRadius: 6,
+      padding: "4px 10px",
+      cursor: "pointer",
+      fontSize: 12,
+      marginBottom: 12,
+      width: "100%",
+    }}
+  >
+    Log out
+  </button>
+
+  <hr style={{ borderColor: "#555", marginBottom: 16 }} />
+
+  {/* Registered users */}
+  {showUsers && (
+    <div style={{ marginBottom: 16 }}>
+      <p style={{ color: "#aaa", fontSize: 12, marginBottom: 8 }}>
+        Users
+      </p>
+
+      {users
+        .filter((u) => u.id !== user.id)
+        .map((u) => (
           <div
-            key={room}
-            onClick={() => switchRoom(room)}
+            key={u.id}
+            onClick={() => console.log("Selected user:", u.username)}
             style={{
               padding: "8px 12px",
               borderRadius: 6,
               cursor: "pointer",
               marginBottom: 4,
-              background: currentRoom === room ? "#5865f2" : "transparent",
-              color: currentRoom === room ? "white" : "#aaa",
+              background: "#40444b",
             }}
           >
-            # {room}
+            👤 {u.username}
           </div>
         ))}
-      </div>
+    </div>
+  )}
+
+  <p style={{ color: "#aaa", fontSize: 12, marginBottom: 8 }}>
+    кімнатки
+  </p>
+
+  {rooms.map((room) => (
+    <div
+      key={room}
+      onClick={() => switchRoom(room)}
+      style={{
+        padding: "8px 12px",
+        borderRadius: 6,
+        cursor: "pointer",
+        marginBottom: 4,
+        background:
+          currentRoom === room ? "#5865f2" : "transparent",
+        color:
+          currentRoom === room ? "white" : "#aaa",
+      }}
+    >
+      # {room}
+    </div>
+  ))}
+</div>
 
       
       <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", width: "100%" }}>
