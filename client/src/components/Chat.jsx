@@ -8,7 +8,7 @@ const socket = io("https://chatapp-production-baa8.up.railway.app");
 export default function Chat({ user, onLogout }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
-  const [currentRoom, setCurrentRoom] = useState("мафія");
+  const [currentRoom, setCurrentRoom] = useState("ташуля");
   const [sidebarOpen, setSidebarOpen] = useState(false); // visibility
   
 
@@ -160,7 +160,10 @@ export default function Chat({ user, onLogout }) {
       <p style={{ color: "#aaa", fontSize: 12, marginBottom: 8 }}>
         Users
       </p>
-
+      
+      <div style={{ color: "yellow", fontSize: 12 }}>
+  Users loaded: {users.length}
+</div>
       {users
         .filter((u) => u.id !== user.id)
         .map((u) => (
