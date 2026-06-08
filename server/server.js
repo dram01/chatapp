@@ -13,7 +13,7 @@ const server = http.createServer(app);
 
 const ALLOWED_ORIGIN = '*';
 
-// Manual CORS headers
+
 app.use((req, res, next) => {
     const origin = req.headers.origin;
     res.header('Access-Control-Allow-Origin', '*');
@@ -46,6 +46,18 @@ app.get('/messages', async (req, res) => {
         [room]
     );
     res.json(result.rows);
+});
+app.get('/users', async (req, res) => {
+    try {
+        const result = await pool.query(
+            'SELECT id, username FROM users ORDER BY username'
+        );
+
+        res.json(result.rows);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to fetch users' })
+    }
 });
 
 io.on('connection', (socket) => {
