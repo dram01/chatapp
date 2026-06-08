@@ -24,20 +24,30 @@ export default function Chat({ user, onLogout }) {
 
   useEffect(() => {
   axios
-    .get("https://chatapp-production-baa8.up.railway.app/users")
-    .then((res) => {
-      console.log("USERS:", res.data);
-      setUsers(res.data);
-    })
-    .catch((err) => console.error("USER ERROR:", err));
-  }, []);;
+    .get(
+      `https://chatapp-production-baa8.up.railway.app/messages?room=${currentRoom}`
+    )
+    .then((res) => setMessages(res.data));
+
+  socket.emit("join_room", currentRoom);
+
+  socket.on("receive_message", (msg) => {
+    setMessages((prev) => [...prev, msg]);
+  });
+
+  return () => {
+    socket.off("receive_message");
+  };
+}, [currentRoom]);;
 
   const switchRoom = (room) => {
-    socket.emit("leave_room", currentRoom);
-    setMessages([]);
-    setCurrentRoom(room);
-    setSidebarOpen(false); // ← closing of the sidebar after picking a room
-  };
+  console.log("SWITCHING TO:", room);
+
+  socket.emit("leave_room", currentRoom);
+  setMessages([]);
+  setCurrentRoom(room);
+  setSidebarOpen(false);
+  };  
 
   const createPrivatChat  = (selectedUser) => {
     const roomName = [user.id, selectedUser.id] 
