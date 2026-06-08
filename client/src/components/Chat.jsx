@@ -163,7 +163,7 @@ export default function Chat({ user, onLogout }) {
                 {/* Date */}
                 {showDateSeparator && (
                   <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "20px 0 12px" }}>
-                    <div style={{ flex: 1, height: 1, background: "#ddd" }} />
+                    <div style={{ flex: 1, height: 1, background: "#09b097" }} />
                     <span style={{
                       fontSize: 12, color: "#aaa", background: "white",
                       padding: "2px 10px", borderRadius: 10, border: "1px solid #ddd", whiteSpace: "nowrap",
@@ -182,12 +182,12 @@ export default function Chat({ user, onLogout }) {
                   marginBottom: 12,
                 }}>
                   {!isMe && (
-                    <div style={{ fontSize: 11, color: "#aaa", marginBottom: 3 }}>
+                    <div style={{ fontSize: 11, color: "#bdff17", marginBottom: 3 }}>
                       {m.username}
                     </div>
                   )}
                   <div style={{
-                    background: isMe ? "#5865f2" : "#e9e9e9",
+                    background: isMe ? "#d8f30c" : "#2715e5",
                     color: isMe ? "white" : "black",
                     padding: "8px 14px",
                     borderRadius: isMe ? "18px 18px 4px 18px" : "18px 18px 18px 4px",
