@@ -39,6 +39,18 @@ export default function Chat({ user, onLogout }) {
     setSidebarOpen(false); // ← closing of the sidebar after picking a room
   };
 
+  const createPrivatChat  = (selectedUser) => {
+    const roomName = [user.id, selectedUser.id] 
+      .sort((a, b) => a - b)
+      .join("_");
+      if (!rooms.includes(roomName)) {
+        setRooms((prev) => [...prev, roomName]);
+      }
+
+      switchRoom(roomName);
+      setShowUsers(false);
+  };
+
   const sendMessage = () => {
     if (!input.trim()) return;
     socket.emit("send_message", {
@@ -144,7 +156,7 @@ export default function Chat({ user, onLogout }) {
         .map((u) => (
           <div
             key={u.id}
-            onClick={() => console.log("Selected user:", u.username)}
+            onClick={() => createPrivateChat(u)}
             style={{
               padding: "8px 12px",
               borderRadius: 6,
