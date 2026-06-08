@@ -156,7 +156,7 @@ export default function Chat({ user, onLogout }) {
         .map((u) => (
           <div
             key={u.id}
-            onClick={() => createPrivateChat(u)}
+            onClick={() => createPrivatChat(u)}
             style={{
               padding: "8px 12px",
               borderRadius: 6,
