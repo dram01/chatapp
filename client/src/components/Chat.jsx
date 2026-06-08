@@ -3,12 +3,13 @@ import { io } from "socket.io-client";
 import axios from "axios";
 
 const socket = io("https://chatapp-production-baa8.up.railway.app");
-const чатики = ["мафія", "ташуля", "гамно", "жопа", "ойой"];
+const ROOMS = ["мафія", "ташуля", "гамно", "жопа", "ойой"];
 
 export default function Chat({ user, onLogout }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [currentRoom, setCurrentRoom] = useState("мафія");
+  const [sidebarOpen, setSidebarOpen] = useState(false); // visibility
 
   useEffect(() => {
     axios.get(`https://chatapp-production-baa8.up.railway.app/messages?room=${currentRoom}`)
@@ -24,6 +25,7 @@ export default function Chat({ user, onLogout }) {
     socket.emit("leave_room", currentRoom);
     setMessages([]);
     setCurrentRoom(room);
+    setSidebarOpen(false); // ← closing of the sidebar after picking a room
   };
 
   const sendMessage = () => {
@@ -48,17 +50,41 @@ export default function Chat({ user, onLogout }) {
   };
 
   return (
-    <div style={{ display: "flex", height: "100vh", fontFamily: "sans-serif" }}>
+    <div style={{ display: "flex", height: "100vh", fontFamily: "sans-serif", overflow: "hidden", position: "relative" }}>
+
+      {/* Dark overlay when sidebar is open on mobile */}
+      {sidebarOpen && (
+        <div
+          onClick={() => setSidebarOpen(false)}
+          style={{
+            position: "fixed",
+            top: 0, left: 0, right: 0, bottom: 0,
+            background: "rgba(0,0,0,0.5)",
+            zIndex: 10,
+          }}
+        />
+      )}
 
       {/* Sidebar */}
-      <div style={{ width: 200, background: "#2f3136", color: "white", padding: 16, flexShrink: 0 }}>
+      <div style={{
+        position: "fixed",
+        top: 0, left: 0, bottom: 0,
+        width: 220,
+        background: "#2f3136",
+        color: "white",
+        padding: 16,
+        flexShrink: 0,
+        zIndex: 20,
+        transform: sidebarOpen ? "translateX(0)" : "translateX(-100%)", // in/out
+        transition: "transform 0.3s ease",
+      }}>
         <h3 style={{ marginBottom: 8 }}>👤 {user.username}</h3>
         <button
           onClick={onLogout}
           style={{
             background: "transparent",
-            border: "1px solid #473dfa",
-            color: "#aaaaaa",
+            border: "1px solid #555",
+            color: "#aaa",
             borderRadius: 6,
             padding: "4px 10px",
             cursor: "pointer",
@@ -70,8 +96,8 @@ export default function Chat({ user, onLogout }) {
           Log out
         </button>
         <hr style={{ borderColor: "#555", marginBottom: 16 }} />
-        <p style={{ color: "#aaa", fontSize: 12, marginBottom: 8 }}>чатики :3</p>
-        {чатики.map((room) => (
+        <p style={{ color: "#aaa", fontSize: 12, marginBottom: 8 }}>кімнатки</p>
+        {ROOMS.map((room) => (
           <div
             key={room}
             onClick={() => switchRoom(room)}
@@ -89,16 +115,37 @@ export default function Chat({ user, onLogout }) {
         ))}
       </div>
 
-      {/* права частинка чатику */}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+      
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", width: "100%" }}>
 
-        {/* Header */}
-        <div style={{ padding: "16px 20px", borderBottom: "1px solid #ccc", fontWeight: "bold", fontSize: 18, flexShrink: 0 }}>
-          # {currentRoom}
+        {/* Header with button */}
+        <div style={{
+          padding: "12px 16px",
+          borderBottom: "1px solid #ccc",
+          display: "flex",
+          alignItems: "center",
+          gap: 12,
+          flexShrink: 0,
+        }}>
+          {/* Button */}
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            style={{
+              background: "transparent",
+              border: "none",
+              cursor: "pointer",
+              fontSize: 22,
+              padding: 0,
+              lineHeight: 1,
+            }}
+          >
+            ☰
+          </button>
+          <span style={{ fontWeight: "bold", fontSize: 18 }}># {currentRoom}</span>
         </div>
 
-        {/* повідомленнячка */}
-        <div style={{ flex: 1, overflowY: "scroll", padding: 20 }}>
+        {/* Messages zone */}
+        <div style={{ flex: 1, overflowY: "scroll", padding: 16 }}>
           {messages.length === 0 && (
             <p style={{ color: "#aaa" }}>поки крінжі нема... ТРЕБА ВИПРАВЛЯТИ!!!</p>
           )}
@@ -113,31 +160,21 @@ export default function Chat({ user, onLogout }) {
             return (
               <div key={i}>
 
-                {/* даточка */}
+                {/* Date */}
                 {showDateSeparator && (
-                  <div style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 10,
-                    margin: "20px 0 12px",
-                  }}>
-                    <div style={{ flex: 1, height: 1, background: "#eb22e7" }} />
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "20px 0 12px" }}>
+                    <div style={{ flex: 1, height: 1, background: "#ddd" }} />
                     <span style={{
-                      fontSize: 12,
-                      color: "black",
-                      background: "rgb(241, 211, 11)",
-                      padding: "2px 10px",
-                      borderRadius: 10,
-                      border: "1px solid #e8f008",
-                      whiteSpace: "nowrap",
+                      fontSize: 12, color: "#aaa", background: "white",
+                      padding: "2px 10px", borderRadius: 10, border: "1px solid #ddd", whiteSpace: "nowrap",
                     }}>
                       {formatDateLabel(m.created_at)}
                     </span>
-                    <div style={{ flex: 1, height: 1, background: "#1636d2" }} />
+                    <div style={{ flex: 1, height: 1, background: "#ddd" }} />
                   </div>
                 )}
 
-                {/* булька повідомленнь */}
+                {/* Message */}
                 <div style={{
                   display: "flex",
                   flexDirection: "column",
@@ -150,17 +187,19 @@ export default function Chat({ user, onLogout }) {
                     </div>
                   )}
                   <div style={{
-                    background: isMe ? "#e1ff00" : "#5865f2",
-                    color: isMe ? "black" : "black",
+                    background: isMe ? "#5865f2" : "#e9e9e9",
+                    color: isMe ? "white" : "black",
                     padding: "8px 14px",
                     borderRadius: isMe ? "18px 18px 4px 18px" : "18px 18px 18px 4px",
-                    maxWidth: "70%",
+                    maxWidth: "75%",
                     wordBreak: "break-word",
                   }}>
                     {m.content}
                   </div>
                   <div style={{ fontSize: 10, color: "#aaa", marginTop: 3 }}>
-                    {m.created_at ? new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ""}
+                    {m.created_at
+                      ? new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                      : ""}
                   </div>
                 </div>
 
@@ -169,8 +208,8 @@ export default function Chat({ user, onLogout }) {
           })}
         </div>
 
-        {/* Input bar */}
-        <div style={{ padding: 16, borderTop: "1px solid #ccc", display: "flex", gap: 8, flexShrink: 0 }}>
+        {/* My input field */}
+        <div style={{ padding: 12, borderTop: "1px solid #ccc", display: "flex", gap: 8, flexShrink: 0 }}>
           <input
             style={{ flex: 1, padding: "10px", borderRadius: 6, border: "1px solid #ccc", fontSize: 14 }}
             value={input}
@@ -180,7 +219,7 @@ export default function Chat({ user, onLogout }) {
           />
           <button
             onClick={sendMessage}
-            style={{ padding: "10px 20px", borderRadius: 6, background: "#5865f2", color: "white", border: "none", cursor: "pointer" }}
+            style={{ padding: "10px 16px", borderRadius: 6, background: "#5865f2", color: "white", border: "none", cursor: "pointer", fontSize: 14 }}
           >
             Send
           </button>
